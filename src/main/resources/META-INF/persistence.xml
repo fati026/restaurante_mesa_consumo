@@ -7,11 +7,13 @@
 
     <persistence-unit name="restaurantePU">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/restaurante_db</jta-data-source>
+        <class>py.una.pol.restaurante.restaurantemesaconsumo.entities.Cliente</class>
         <properties>
             <!-- JDBC database connection settings -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/restaurante_db"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/restaurante_db"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
-            <property name="javax.persistence.jdbc.password" value="admin2024."/>
+            <property name="javax.persistence.jdbc.password" value="postgres"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 
             <!-- Specify dialect for PostgreSQL -->
