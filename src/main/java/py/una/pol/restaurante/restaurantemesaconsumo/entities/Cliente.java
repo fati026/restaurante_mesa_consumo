@@ -23,8 +23,7 @@ public class Cliente implements Serializable {
     @Id
     @Column(name = "id")
     @Basic(optional = false)
-    @GeneratedValue(generator = "cliente", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "clientes", sequenceName = "cliente", allocationSize = 0)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @Column(name = "nombre", length = 50)
