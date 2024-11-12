@@ -7,7 +7,7 @@
 
     <persistence-unit name="restaurantePU">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/restaurante_db</jta-data-source>
+        <jta-data-source>java:/jdbc/restaurante_db</jta-data-source>
         <class>py.una.pol.restaurante.restaurantemesaconsumo.entities.Cliente</class>
         <properties>
             <!-- JDBC database connection settings -->

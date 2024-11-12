@@ -23,13 +23,13 @@ public class ClienteREST {
     private ClienteDAO clienteDAO;
     
     @GET
-    @Path("/")
+    @Path("/cliente")
     public Response listar(){
         return Response.ok(clienteDAO.lista()).build();
     }
     
     @POST
-    @Path("/")
+    @Path("/cliente")
     public Response crear(Cliente c){
         this.clienteDAO.agregar(c);
         return Response.ok().build();
