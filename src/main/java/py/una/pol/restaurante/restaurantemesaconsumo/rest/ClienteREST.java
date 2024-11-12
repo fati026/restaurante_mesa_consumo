@@ -14,7 +14,7 @@ import py.una.pol.restaurante.restaurantemesaconsumo.entities.Cliente;
  *
  * @author Verónica
  */
-@Path("cliente")
+@Path("/cliente")
 @Consumes("application/json")
 @Produces("application/json")
 
