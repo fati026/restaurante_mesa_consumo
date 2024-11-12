@@ -47,6 +47,10 @@ public class Cliente implements Serializable {
         this.email = email;
     }
     
+    public Cliente(Long id) {
+        this.id = id;
+    }
+    
     public Long getId() {
         return id;
     }
