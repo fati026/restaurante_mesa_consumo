@@ -29,7 +29,7 @@ public class ClienteREST {
     }
     
     @POST
-    @Path("/")
+    @Path("/crear")
     public Response crear(Cliente c){
         this.clienteDAO.agregar(c);
         return Response.ok().build();

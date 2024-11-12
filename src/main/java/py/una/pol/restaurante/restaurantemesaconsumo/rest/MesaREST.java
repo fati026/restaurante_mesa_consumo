@@ -77,4 +77,19 @@ public class MesaREST {
                     .build();
         }
     }
+    
+    @PUT
+    @Path("/{id}/cerrar")
+    public Response cerrarMesa(@PathParam("id") int id) {
+    Mesa mesa = mesaDAO.findById(id);
+    if (mesa != null && "ocupada".equals(mesa.getEstado())) {
+        mesa.setEstado("cerrada");
+        mesaDAO.update(mesa); // Se actualiza el estado a 'cerrada'
+        return Response.ok("Mesa cerrada con éxito").build();
+    } else {
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("Mesa no encontrada o ya está cerrada").build();
+    }
+}
+
 }
