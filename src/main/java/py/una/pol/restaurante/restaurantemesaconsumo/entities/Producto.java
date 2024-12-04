@@ -16,6 +16,7 @@ public class Producto {
 
     private String nombre;
     private Double precio;
+    private Long idProducto;
 
     // Constructor vacío
     public Producto() {
@@ -50,6 +51,14 @@ public class Producto {
 
     public void setPrecio(Double precio) {
         this.precio = precio;
+    }
+    
+    public Long getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(Long idProducto) {
+        this.idProducto = idProducto;
     }
 
     @Override

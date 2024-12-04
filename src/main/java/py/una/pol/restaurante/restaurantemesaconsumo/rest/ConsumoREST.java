@@ -12,10 +12,15 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ConsumoDAO;
+import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ConsumoStockDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.MesaDAO;
+import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ProductoStockDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.Cliente;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.Consumo;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.ConsumoStock;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.DetalleConsumo;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.Producto;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.ProductoStock;
 
 /**
  *
@@ -28,6 +33,12 @@ public class ConsumoREST {
     
     @EJB
     private ConsumoDAO consumoDAO;
+    @EJB
+    private ProductoStockDAO productoStockDAO;  // Inyectando el DAO de ProductoStock
+    
+    @EJB
+    private ConsumoStockDAO consumoStockDAO;    // Inyectando el DAO de ConsumoStock
+    
     private MesaDAO mesaDAO;
     
     @GET
@@ -66,18 +77,42 @@ public class ConsumoREST {
         if (consumo == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Mesa no ocupada").build();
         }
+         // Lógica para actualizar el inventario y generar alertas
         
+       Producto producto = detalle.getProducto();  // Obtienes el Producto
+       ProductoStock productoStock = productoStockDAO.findById(producto.getIdProducto());  // Buscas el ProductoStock asociado al Producto
+       if (productoStock != null) {
+            // Actualización del stock
+            int nuevoStock = productoStock.getStockActual() - detalle.getCantidad();
+            if (nuevoStock < 0) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("No hay suficiente stock para este producto.")
+                    .build();
+            }
 //        detalle.setConsumo(consumo);
 //        consumo.getDetalles().add(detalle);
 //        consumo.setTotal(consumo.getTotal() + calcularSubtotal(detalle));
-        consumoDAO.guardarConsumo(consumo);
         
-        return Response.ok(consumo).build();
+         // Actualizamos el stock del producto
+          productoStock.setStockActual(nuevoStock);
+          productoStockDAO.update(productoStock);
+          consumoDAO.guardarConsumo(consumo);
+        
+           // Generar alerta si el stock es bajo
+            if (nuevoStock < productoStock.getStockMinimo()) {
+                // Aquí se podría generar una alerta en el sistema, o almacenar una alerta en la base de datos
+                System.out.println("Alerta: Stock bajo para el producto ID " + detalle.getProducto().getId());
+            }
+          return Response.ok(consumo).build();
+           } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                .entity("Producto no encontrado en el inventario.")
+                .build();
+        }   
     }
-
     private double calcularSubtotal(DetalleConsumo detalle) {
         // Implementa la lógica para calcular el subtotal (p.ej. precio de producto * cantidad)
         return 0.0; // Valor temporal
-    }
+    }    
 }
 
