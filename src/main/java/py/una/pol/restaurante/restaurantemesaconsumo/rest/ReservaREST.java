@@ -30,8 +30,14 @@ public class ReservaREST {
      // Crear un nuevo producto
     @POST
     public Response insertarReserva(Reserva reserva) {
-        reservaDAO.guardarReserva(reserva);
-        return Response.status(Response.Status.CREATED).entity("Reserva guardada exitosamente").build();
+        try {
+            reservaDAO.guardarReserva(reserva);
+            return Response.status(Response.Status.CREATED).entity("Reserva guardada exitosamente").build();
+        } catch (Exception e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                       .entity(e.getMessage())
+                       .build();
+        }    
     }
     @PUT
     @Path("/{id}")
@@ -43,6 +49,34 @@ public class ReservaREST {
             return Response.ok("Reserva actualizada exitosamente").build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Reserva no encontrada").build();
+        }
+    }
+    
+    @PUT
+    @Path("/reservas/{id}/cancelar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelarReserva(@PathParam("id") int id) {
+        try {
+            reservaDAO.cancelarReserva(id);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+    
+    @PUT
+    @Path("/reservas/{id}/confirmar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response confirmarReserva(@PathParam("id") int id) {
+        try {
+            reservaDAO.confirmarReserva(id);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity(e.getMessage())
+                           .build();
         }
     }
     
