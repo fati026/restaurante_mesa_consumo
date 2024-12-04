@@ -34,6 +34,9 @@ public class Reserva {
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
     
+    @Column(name = "id_cliente", nullable = false)
+    private String estado;  // Estado de la reserva (Ej:"confirmada", "cancelada")
+    
     public int getId() {
         return id;
     }
@@ -80,6 +83,14 @@ public class Reserva {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+    
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
 }
