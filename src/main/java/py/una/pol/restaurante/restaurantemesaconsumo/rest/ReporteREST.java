@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ReporteDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.ConsumoDTO;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.DashboardDTO;
 
 @Path("/reportes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,6 +62,29 @@ public class ReporteREST {
     public Response generarReporteVentasMesa(@QueryParam("fechaInicio") String fechaInicio,
                                          @QueryParam("fechaFin") String fechaFin) {
         List<ConsumoDTO> reporte = reporteDAO.generarReporteVentasMesa(fechaInicio, fechaFin);
+        return Response.ok(reporte).build();
+    }
+    
+    @GET
+    @Path("/dashboardventa")
+    public Response generarReporteVentaDiaria(@QueryParam("fechaInicio") String fechaInicio,
+                                         @QueryParam("fechaFin") String fechaFin) {
+        List<DashboardDTO> reporte = reporteDAO.generarReporteVentaDiaria(fechaInicio, fechaFin);
+        return Response.ok(reporte).build();
+    }
+    
+    @GET
+    @Path("/dashboardranking")
+    public Response generarReporteRanking(@QueryParam("fechaInicio") String fechaInicio,
+                                         @QueryParam("fechaFin") String fechaFin) {
+        List<DashboardDTO> reporte = reporteDAO.generarReporteRanking(fechaInicio, fechaFin);
+        return Response.ok(reporte).build();
+    }
+    
+    @GET
+    @Path("/dashboardocupacion")
+    public Response generarReporteOcupacion() {
+        List<DashboardDTO> reporte = reporteDAO.generarReporteOcupacion();
         return Response.ok(reporte).build();
     }
 }
