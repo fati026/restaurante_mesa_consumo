@@ -87,4 +87,12 @@ public class ReporteREST {
         List<DashboardDTO> reporte = reporteDAO.generarReporteOcupacion();
         return Response.ok(reporte).build();
     }
+    
+    @GET
+    @Path("/dashboardmetodopago")
+    public Response generarReporteVentaMetodoPago(@QueryParam("fechaInicio") String fechaInicio,
+                                         @QueryParam("fechaFin") String fechaFin) {
+        List<DashboardDTO> reporte = reporteDAO.generarReporteVentaMetodoPago(fechaInicio, fechaFin);
+        return Response.ok(reporte).build();
+    }
 }

@@ -38,4 +38,8 @@ public class ConsumoDAO {
                  .findFirst()
                  .orElse(null);
     }
+    
+    public Consumo findById(int id) {
+        return em.find(Consumo.class, id);
+    }
 }
