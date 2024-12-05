@@ -11,14 +11,19 @@ import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ClienteDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ConsumoDAO;
+import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ConsumoPagosDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ConsumoStockDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.MesaDAO;
+import py.una.pol.restaurante.restaurantemesaconsumo.ejb.MetodoPagoDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.ejb.ProductoStockDAO;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.Cliente;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.Consumo;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.ConsumoPagos;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.ConsumoStock;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.DetalleConsumo;
+import py.una.pol.restaurante.restaurantemesaconsumo.entities.MetodoPago;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.Producto;
 import py.una.pol.restaurante.restaurantemesaconsumo.entities.ProductoStock;
 
@@ -40,6 +45,7 @@ public class ConsumoREST {
     private ConsumoStockDAO consumoStockDAO;    // Inyectando el DAO de ConsumoStock
     
     private MesaDAO mesaDAO;
+    private ConsumoPagosDAO consumoPagosDAO;
     
     @GET
     @Path("/mesa/{mesaId}")
@@ -113,6 +119,32 @@ public class ConsumoREST {
     private double calcularSubtotal(DetalleConsumo detalle) {
         // Implementa la lógica para calcular el subtotal (p.ej. precio de producto * cantidad)
         return 0.0; // Valor temporal
-    }    
+    } 
+    
+    @POST
+    @Path("/mesa/{mesaId}/metodopago")
+    public Response guardarPago(ConsumoPagos consumoPagos) {
+        try {
+            consumoPagosDAO.guardarPago(consumoPagos);
+            return Response.status(Response.Status.CREATED).entity("Pago guardado exitosamente").build();
+        } catch (Exception e) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                       .entity(e.getMessage())
+                       .build();
+        }    
+        
+    }
+    
+    @DELETE
+    @Path("/mesa/{mesaId}/metodopago/{metodoId}")
+    public Response eliminarPago(@PathParam("id") int id) {
+        ConsumoPagos consumoPagos = consumoPagosDAO.findById(id);
+        if (consumoPagos != null) {
+            consumoPagosDAO.delete(id);
+            return Response.ok("Pago eliminado exitosamente").build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Pago no encontrado").build();
+        }
+    }
 }
 

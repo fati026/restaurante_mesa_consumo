@@ -112,4 +112,18 @@ public class ReporteDAO {
         return em.createQuery(jpql, DashboardDTO.class)
                  .getResultList();
     }
+    
+    public List<DashboardDTO> generarReporteVentaMetodoPago(String fechaInicio, String fechaFin) {        
+        String jpql = "SELECT new py.una.pol.restaurante.restaurantemesaconsumo.entities.DashboardDTO(MP.nombre_metodo, SUM(PA.monto)) " +
+                      "FROM public.pagos AS PA" +
+                      "INNER JOIN public.metodos_pago MP ON PA.id_metodo = MP.id" +
+                      "INNER JOIN public.consumo AS CO ON PA.id_consumo = CO.id" +
+                      "WHERE CO.fecha_creacion BETWEEN :fechaInicio AND :fechaFin AND fecha_cierre is not null" +
+                      "GROUP BY DATE(fecha_creacion)" +
+                      "ORDER BY MP.nombre_metodo";
+        return em.createQuery(jpql, DashboardDTO.class)
+                 .setParameter("fechaInicio", LocalDate.parse(fechaInicio))
+                 .setParameter("fechaFin", LocalDate.parse(fechaFin))
+                 .getResultList();
+    }
 }
